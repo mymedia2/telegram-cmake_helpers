@@ -7,7 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 '''
 import sys, os, shutil, subprocess
 
-def run(project, arguments, buildType=''):
+def run(project, arguments, buildType='', verbose=False):
     scriptPath = os.path.dirname(os.path.realpath(__file__))
     basePath = scriptPath + '/../out/' + buildType
 
@@ -44,6 +44,9 @@ def run(project, arguments, buildType=''):
                 if len(target) > 0:
                     cmake.append('-DDESKTOP_APP_SPECIAL_TARGET=' + target)
 
+    if verbose:
+        cmake.insert(0, 'set -x;')
+        cmake.extend(['-DCMAKE_VERBOSE_MAKEFILE=ON', '-DCMAKE_AUTOGEN_VERBOSE=ON'])
     cmake.extend(['-Werror=dev', '-Werror=deprecated', '--warn-uninitialized', '..' if not buildType else '../..'])
     command = ' '.join(cmake)
 
